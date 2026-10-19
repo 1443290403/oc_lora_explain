@@ -1,5 +1,6 @@
 """Run a no-artist comparison plan against an already-running ComfyUI server."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -9,6 +10,7 @@ import urllib.request
 
 from PIL import Image, ImageDraw, ImageFont
 from comfy_graph import graph
+from evaluation_cache import fingerprint, load_completed
 from project_paths import comfy_url
 
 
@@ -76,6 +78,13 @@ def main():
         parser.error("Plan needs unique ASCII names containing letters, digits, underscores or hyphens")
     if args.output.exists() and not args.resume:
         parser.error("Output exists; use a new directory or --resume")
+    try:
+        # Validate every existing result before making any server request.
+        results = load_completed(args.output, plan) if args.resume else []
+        for spec in plan:
+            fingerprint(spec)
+    except (ValueError, KeyError, AssertionError) as error:
+        parser.error(str(error))
     client = Client(args.url)
     client.assert_idle()
     available = client.request("/object_info")
@@ -86,7 +95,6 @@ def main():
     for directory in ("images", "api"):
         (args.output / directory).mkdir(exist_ok=True)
     result_file = args.output / "results.json"
-    results = json.loads(result_file.read_text(encoding="utf-8")) if result_file.exists() else []
     for spec in plan:
         if any(r["name"] == spec["name"] for r in results):
             continue
@@ -99,8 +107,12 @@ def main():
         (args.output / "api" / (spec["name"] + "_history.json")).write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
         target = args.output / "images" / (spec["name"] + ".png")
         target.write_bytes(client.image(history["outputs"]["8"]["images"][0]))
-        results.append({"name": spec["name"], "spec": spec, "prompt_id": pid, "seconds": round(time.monotonic() - started, 2)})
-        result_file.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+        results.append({"name": spec["name"], "spec": spec, "graph_sha256": fingerprint(spec),
+                        "image_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+                        "prompt_id": pid, "seconds": round(time.monotonic() - started, 2)})
+        temporary = result_file.with_suffix(".tmp")
+        temporary.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+        temporary.replace(result_file)
         print("DONE " + spec["name"], flush=True)
     contact(results, args.output)
     if args.free_cache:

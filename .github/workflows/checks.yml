@@ -1,0 +1,44 @@
+name: Portable helpers
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  helpers:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Windows bootstrap
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/setup.ps1 -Python (Get-Command python).Source
+      - name: Linux bootstrap
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash scripts/setup.sh --python "$(command -v python)"
+      - name: Verify repeat setup preserves local configuration
+        shell: python
+        run: |
+          import hashlib, pathlib, subprocess, sys
+          local = pathlib.Path('configs/local.toml')
+          before = hashlib.sha256(local.read_bytes()).hexdigest()
+          subprocess.run([sys.executable, 'scripts/bootstrap.py', '--skip-install'], check=True)
+          assert hashlib.sha256(local.read_bytes()).hexdigest() == before
+      - name: Publication boundary and whitespace
+        shell: bash
+        run: |
+          python scripts/check_publish.py
+          git diff --check

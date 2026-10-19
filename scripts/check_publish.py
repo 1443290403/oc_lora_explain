@@ -10,9 +10,9 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-ROOT_FILES = {".gitignore", ".gitattributes", "README.md", "requirements.txt", "environment.yml"}
-DIRS = {"scripts", "configs", "workflows", "docs", "env", "tests"}
-SUFFIXES = {".py", ".json", ".toml", ".md", ".txt", ".yml", ".yaml"}
+ROOT_FILES = {".gitignore", ".gitattributes", "README.md", "AGENTS.md", "requirements.txt", "environment.yml"}
+DIRS = {"scripts", "configs", "workflows", "docs", "env", "tests", ".github"}
+SUFFIXES = {".py", ".json", ".toml", ".md", ".txt", ".yml", ".yaml", ".ps1", ".sh"}
 PATTERNS = {
     "GitHub credential": re.compile(r"(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{30,})"),
     "Hugging Face credential": re.compile(r"hf_[A-Za-z0-9]{25,}"),

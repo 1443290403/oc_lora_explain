@@ -1,0 +1,9 @@
+{
+  "description": "Copy to assets.local.json for private migration notes. Empty hashes are unverified. Never publish actual private asset inventories.",
+  "assets": [
+    {"role": "base_model", "local_config_key": "paths.base_model", "suggested_path": "models/waiIllustriousSDXL_v170.safetensors", "sha256": null, "source": "Obtain the intended version from its authorized publisher"},
+    {"role": "training_dataset", "local_config_key": "paths.dataset", "suggested_path": "data/clean_dataset_v6", "sha256": null, "source": "Private image and caption backup; verify permissions and matching pairs"},
+    {"role": "evaluation_lora", "suggested_path": "models/loras/naikaer_oc_v6.safetensors", "sha256": null, "source": "Private V6 model backup; install in ComfyUI and match evaluation plan names"}
+  ],
+  "notes": ["Suggested paths are examples, not download locations or proof of existing files.", "Keep actual hashes, paths and dataset inventories in ignored private notes.", "Install environments again on the new machine; do not copy virtual environments."]
+}

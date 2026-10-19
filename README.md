@@ -14,25 +14,28 @@
 | `docs/` | 环境、数据规范、训练流程、评估结论和发布规则 |
 | `env/tested_versions.json` | 实验时观察到的版本，不是完整安装锁文件 |
 | `tests/` | 路径替换、数据审查、采样图与发布检查的 CPU 测试 |
+| `AGENTS.md` | 智能体接手顺序、命令、数据与进程操作约束 |
+| `.github/workflows/checks.yml` | Windows / Ubuntu 安装与 CPU 验证 |
 
 ## 快速开始
 
-需要 Python 3.12。辅助工具可以使用独立环境：
+需要 Python 3.12（可使用已有 Anaconda 的解释器）。Windows PowerShell：
 
 ```powershell
-conda env create -f environment.yml
-conda activate oc-lora-tools
-Copy-Item configs/local.example.toml configs/local.toml
+./scripts/setup.ps1 -Python (Get-Command python).Source
+./.venv/Scripts/python.exe -X utf8 scripts/doctor.py --profile helper
 ```
+
+Linux / 云端使用 `bash scripts/setup.sh`，随后用 `.venv/bin/python` 执行辅助命令。安装器建立 `.venv`、安装依赖、复制缺失的本机配置并执行测试；重复运行保留已有配置，不下载模型、不安装 GPU 环境、不启动服务。也可沿用 `environment.yml` 创建独立 Conda 辅助环境。
 
 编辑被 Git 忽略的 `configs/local.toml`，填写现有 OneTrainer、ComfyUI、底模和数据集的位置。配置中的相对路径统一相对于项目根目录，不依赖启动命令的工作目录。
 
 ```powershell
 # 仅读取数据，报告写入私有运行目录。
-python scripts/audit_dataset.py data/clean_dataset_v6 --output runs/audit.json
+./.venv/Scripts/python.exe -X utf8 scripts/audit_dataset.py data/clean_dataset_v6 --output runs/audit.json
 
 # 生成配置，不启动训练。数据和底模必须已经存在。
-python scripts/make_train_config.py --run-dir runs/smoke --smoke-images 12
+./.venv/Scripts/python.exe -X utf8 scripts/make_train_config.py --run-dir runs/smoke --smoke-images 12
 
 # 必须使用已安装 OneTrainer 依赖的 Python 环境；这一步会实际训练。
 conda run -n onetrainer python scripts/run_training.py runs/smoke/train_config.json
@@ -41,11 +44,13 @@ conda run -n onetrainer python scripts/run_training.py runs/smoke/train_config.j
 完整训练使用新的运行目录和输出文件名：
 
 ```powershell
-python scripts/make_train_config.py --run-dir runs/v6-new
+./.venv/Scripts/python.exe -X utf8 scripts/make_train_config.py --run-dir runs/v6-new
 conda run -n onetrainer python scripts/run_training.py runs/v6-new/train_config.json
 ```
 
 `requirements.txt` 仅用于辅助工具，不能代替 OneTrainer 或 ComfyUI 自身的完整依赖。安装方式与 CUDA 注意事项见[环境说明](docs/SETUP.md)。
+
+新设备按[迁移清单](docs/MIGRATION.md)准备私人资源；云端使用[辅助开发说明](docs/CLOUD.md)。其他对话的智能体先读 `AGENTS.md` 和[项目现状](docs/PROJECT_STATUS.md)。
 
 ## 当前基线与限制
 
@@ -63,7 +68,7 @@ conda run -n onetrainer python scripts/run_training.py runs/v6-new/train_config.
 ComfyUI 已启动、模型已安装且队列空闲时，可执行明确的对照计划：
 
 ```powershell
-python scripts/comfy_evaluate.py --plan configs/evaluation_fullbody.example.json --output runs/fullbody-check --free-cache
+./.venv/Scripts/python.exe -X utf8 scripts/comfy_evaluate.py --plan configs/evaluation_fullbody.example.json --output runs/fullbody-check --free-cache
 ```
 
 示例计划包含 V4 / V5 等对照项。缺少相应 LoRA 时先从计划中删除这些项，或换成自己已安装的文件名；权重文件不在仓库中。
@@ -73,9 +78,9 @@ python scripts/comfy_evaluate.py --plan configs/evaluation_fullbody.example.json
 ## 提交前检查
 
 ```powershell
-python -m unittest discover -s tests -v
-git add .gitignore .gitattributes README.md requirements.txt environment.yml scripts configs workflows docs env tests
-python scripts/check_publish.py
+./.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -v
+git add .gitignore .gitattributes AGENTS.md .github README.md requirements.txt environment.yml scripts configs workflows docs env tests
+./.venv/Scripts/python.exe -X utf8 scripts/check_publish.py
 git diff --cached --stat
 ```
 

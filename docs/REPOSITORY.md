@@ -12,6 +12,7 @@
 - `configs/`中的不含认证值、使用路径占位符的模板；
 - `workflows/`中的可加载JSON，选图输入已替换为占位符；
 - 经过整理的文档、依赖说明、版本记录和Git规则。
+- 根目录 `AGENTS.md`、`scripts/` 下的安装脚本和 `.github/` 下的自动检查工作流。
 
 保留本地：原始/训练/生成图片，作者参考图，逐图caption和素材清单，模型与中间权重，训练缓存和优化器状态，API执行历史，实验日志/报告原件，旧脚本和机器专用配置。不会使用强制添加或Git LFS绕过这些规则。
 
@@ -24,7 +25,7 @@
 ## 检查实际提交内容
 
 ```powershell
-git add .gitignore .gitattributes README.md requirements.txt environment.yml scripts configs workflows docs env tests
+git add .gitignore .gitattributes AGENTS.md .github README.md requirements.txt environment.yml scripts configs workflows docs env tests
 python scripts/check_publish.py
 git diff --cached --check
 git diff --cached --stat

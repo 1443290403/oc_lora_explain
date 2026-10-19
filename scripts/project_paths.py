@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import tomllib
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULTS = {
@@ -18,7 +19,30 @@ def settings(config: Path | None = None) -> dict:
     file = config or ROOT / "configs/local.toml"
     if not file.is_absolute():
         file = ROOT / file
-    return tomllib.loads(file.read_text(encoding="utf-8")) if file.exists() else {}
+    if not file.exists():
+        if config is not None:
+            raise FileNotFoundError(f"Explicit configuration does not exist: {file}")
+        return {}
+    value = tomllib.loads(file.read_text(encoding="utf-8"))
+    allowed = {"paths": set(DEFAULTS), "comfyui": {"url"}}
+    for table, entries in value.items():
+        if table not in allowed or not isinstance(entries, dict):
+            raise ValueError(f"Unknown configuration table: {table}")
+        for key, item in entries.items():
+            if key not in allowed[table]:
+                raise ValueError(f"Unknown configuration key: {table}.{key}")
+            if not isinstance(item, str) or not item.strip():
+                raise ValueError(f"Expected a nonempty string: {table}.{key}")
+    if "url" in value.get("comfyui", {}):
+        validate_url(value["comfyui"]["url"])
+    return value
+
+
+def validate_url(url: str) -> str:
+    parts = urlsplit(url)
+    if parts.scheme not in {"http", "https"} or not parts.hostname or parts.username or parts.password or parts.query or parts.fragment:
+        raise ValueError("ComfyUI URL must be HTTP(S), without credentials, query or fragment")
+    return url.rstrip("/")
 
 
 def path_for(name: str, config: Path | None = None) -> Path:
@@ -28,7 +52,7 @@ def path_for(name: str, config: Path | None = None) -> Path:
 
 
 def comfy_url(config: Path | None = None) -> str:
-    return os.environ.get("OC_COMFYUI_URL", settings(config).get("comfyui", {}).get("url", "http://127.0.0.1:8188")).rstrip("/")
+    return validate_url(os.environ.get("OC_COMFYUI_URL", settings(config).get("comfyui", {}).get("url", "http://127.0.0.1:8188")))
 
 
 def expand_template(value, variables: dict[str, str]):
