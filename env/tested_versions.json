@@ -1,0 +1,26 @@
+{
+  "observed_date": "2026-10-20",
+  "description": "Observed local experiment versions; not a cross-platform install lockfile.",
+  "onetrainer": {
+    "repository": "https://github.com/Nerogar/OneTrainer",
+    "commit": "b08db378d18821903db88c7493b9ee3c5e33ee58",
+    "python": "3.12.15",
+    "torch": "2.12.0+cu130",
+    "torchvision": "0.27.0+cu130",
+    "bitsandbytes": "0.49.1"
+  },
+  "comfyui": {
+    "repository": "https://github.com/Comfy-Org/ComfyUI",
+    "commit": "e8665ca8e4089ab917567cdb491308e1397663d4",
+    "reported_version": "0.39.0",
+    "python": "3.12.10",
+    "torch": "2.14.1+cu130",
+    "frontend": "1.55.14"
+  },
+  "training_hardware": {
+    "os": "Windows 11",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "vram_mib_reported": 8151,
+    "training_peak_mib": 7703
+  }
+}

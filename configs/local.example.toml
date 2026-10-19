@@ -1,0 +1,12 @@
+# Copy to configs/local.toml, which is ignored by Git.
+# All relative paths resolve against the project root, never the working directory.
+[paths]
+onetrainer = "../OneTrainer"
+comfyui = "../ComfyUI"
+base_model = "models/waiIllustriousSDXL_v170.safetensors"
+dataset = "data/clean_dataset_v6"
+run = "runs/v6"
+output_model = "outputs/naikaer_oc_v6.safetensors"
+
+[comfyui]
+url = "http://127.0.0.1:8188"

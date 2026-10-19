@@ -1,0 +1,5 @@
+# Project helpers only. Install OneTrainer and ComfyUI in their own environments.
+numpy==2.2.6
+Pillow==12.3.0
+psutil==7.2.2
+safetensors==0.8.0

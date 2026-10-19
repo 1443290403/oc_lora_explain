@@ -1,0 +1,132 @@
+[
+  {
+    "name": "V6_s42_w70_832",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "native"
+  },
+  {
+    "name": "V6_s42_w100_832",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 1.0,
+    "mode": "native"
+  },
+  {
+    "name": "V6_s123_w70_832",
+    "seed": 123,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "native"
+  },
+  {
+    "name": "V6_s123_w100_832",
+    "seed": 123,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 1.0,
+    "mode": "native"
+  },
+  {
+    "name": "V6_s456_w70_832",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "native"
+  },
+  {
+    "name": "V6_s456_w100_832",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 1.0,
+    "mode": "native"
+  },
+  {
+    "name": "base_s42_832",
+    "seed": 42,
+    "lora": null,
+    "mode": "base"
+  },
+  {
+    "name": "V4_s42_w70_832",
+    "seed": 42,
+    "lora": "naikaer_oc_v4_fresh.safetensors",
+    "strength": 0.7,
+    "mode": "old"
+  },
+  {
+    "name": "base_s456_832",
+    "seed": 456,
+    "lora": null,
+    "mode": "base"
+  },
+  {
+    "name": "V4_s456_w70_832",
+    "seed": 456,
+    "lora": "naikaer_oc_v4_fresh.safetensors",
+    "strength": 0.7,
+    "mode": "old"
+  },
+  {
+    "name": "V6_s42_upper_832",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "upper",
+    "prompt": "naikaer_oc, 1girl, solo, black dress, standing, upper body,"
+  },
+  {
+    "name": "V6_s456_upper_832",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "upper",
+    "prompt": "naikaer_oc, 1girl, solo, black dress, standing, upper body,"
+  },
+  {
+    "name": "V6_s42_direct1024",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "direct",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "name": "V6_s456_direct1024",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "direct",
+    "width": 1024,
+    "height": 1536
+  },
+  {
+    "name": "V6_s42_latent_hires",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "latent_hires"
+  },
+  {
+    "name": "V6_s456_latent_hires",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "latent_hires"
+  },
+  {
+    "name": "V6_s42_pixel_hires",
+    "seed": 42,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "pixel_hires"
+  },
+  {
+    "name": "V6_s456_pixel_hires",
+    "seed": 456,
+    "lora": "naikaer_oc_v6.safetensors",
+    "strength": 0.7,
+    "mode": "pixel_hires"
+  }
+]
